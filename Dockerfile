@@ -1,27 +1,21 @@
 # Use the official Python base image with slim version for a lightweight build
 FROM python:3.9-slim
 
+# Set environment variables to avoid writing .pyc files and to ensure output is flushed immediately
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 # Set the working directory
 WORKDIR /app
 
-# Install system-level dependencies required for Hugging Face, PyTorch, and transformers
-RUN apt-get update && apt-get install -y \
-    git \
-    wget \
-    libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install PyTorch - this uses the CPU-only version of PyTorch
-RUN pip install torch --no-cache-dir
-
-# Install Python dependencies in one step to optimize layer caching
+# Copy only requirements.txt first to leverage Docker cache
 COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# Download and cache the Hugging Face model and tokenizer during the build phase
-RUN python -c "from transformers import T5Tokenizer, T5ForConditionalGeneration; \
-    T5Tokenizer.from_pretrained('mrm8488/t5-small-finetuned-wikiSQL').save_pretrained('/app/model'); \
-    T5ForConditionalGeneration.from_pretrained('mrm8488/t5-small-finetuned-wikiSQL').save_pretrained('/app/model')"
+# Upgrade pip and install Python dependencies in one step to optimize layer caching
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu \
+    && rm -rf ~/.cache/pip  # Clean up pip cache to reduce image size
 
 # Copy the rest of the application code
 COPY . .
