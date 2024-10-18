@@ -4,6 +4,16 @@ FROM python:3.9-slim
 # Set the working directory
 WORKDIR /app
 
+# Install system-level dependencies required for Hugging Face, PyTorch, and transformers
+RUN apt-get update && apt-get install -y \
+    git \
+    wget \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PyTorch - this uses the CPU-only version of PyTorch
+RUN pip install torch --no-cache-dir
+
 # Install Python dependencies in one step to optimize layer caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
