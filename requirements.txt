@@ -1,0 +1,5 @@
+sqlparse
+streamlit
+transformers
+pandas
+sentencepiece
