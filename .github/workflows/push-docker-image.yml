@@ -17,13 +17,10 @@ jobs:
         username: manavmuthanna
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build the Docker image
+    - name: Build and Push the Docker image
       run: |
         docker build -t manavmuthanna/text2sql:latest .
-
-    - name: Push the Docker image
-      run: |
-        docker push yourusername/yourimagename:latest
+        docker push manavmuthanna/text2sql:latest
 
     - name: Log out of Docker Hub
       run: |
