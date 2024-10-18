@@ -2,7 +2,8 @@
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 # Load the tokenizer and model from the local directory
-model_path = "text_to_sql_model/"
+# model_path = "text_to_sql_model/"
+model_path = "/app/model"
 tokenizer = T5Tokenizer.from_pretrained(model_path)
 model = T5ForConditionalGeneration.from_pretrained(model_path)
 

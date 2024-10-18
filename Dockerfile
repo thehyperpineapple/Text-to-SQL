@@ -8,6 +8,11 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
+# Download and cache the Hugging Face model and tokenizer during the build phase
+RUN python -c "from transformers import T5Tokenizer, T5ForConditionalGeneration; \
+    T5Tokenizer.from_pretrained('mrm8488/t5-small-finetuned-wikiSQL').save_pretrained('/app/model'); \
+    T5ForConditionalGeneration.from_pretrained('mrm8488/t5-small-finetuned-wikiSQL').save_pretrained('/app/model')"
+
 # Copy the rest of the application code
 COPY . .
 
