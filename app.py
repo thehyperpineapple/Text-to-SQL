@@ -4,10 +4,10 @@ import streamlit as st
 from model import get_sql  # Import from the new module
 from database import get_table_data, execute_sql_query
 
-DB_PATH = "example.db"
+DB_PATH = "chinook.db"
 
 # Define available tables
-TABLES = ["employees"]
+TABLES = ["employees", "customers", "tracks", "albums", "artists", "genres"]
 
 # Define the clean_sql_output function
 def clean_sql_output(sql_query, table_name):
