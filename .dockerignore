@@ -1,4 +1,5 @@
 venv
+text_to_sql_model
 __pycache__
 helpers
 
