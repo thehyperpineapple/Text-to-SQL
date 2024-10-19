@@ -14,6 +14,14 @@ def clean_sql_output(sql_query, table_name):
     # Remove unwanted tokens like '<pad>' and '</s>'
     cleaned_query = sql_query.replace('<pad>', '').replace('</s>', '')
 
+    # Capitalize only the first letter of the table_name
+    formatted_table_name = table_name.capitalize()
+
+    # Check if the table name is right after SELECT (select all columns)
+    if f"SELECT {formatted_table_name}" in cleaned_query:
+        cleaned_query = cleaned_query.replace(f"SELECT {formatted_table_name}", 'SELECT *')
+    
+
     # Replace the word "table" with "employees"
     cleaned_query = cleaned_query.replace('table', table_name)
 

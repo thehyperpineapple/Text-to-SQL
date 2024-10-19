@@ -25,6 +25,10 @@ def clean_sql_output(sql_query):
     # Remove unwanted tokens like '<pad>' and '</s>'
     cleaned_query = sql_query.replace('<pad>', '').replace('</s>', '')
 
+    # Check if the table name is right after SELECT (select all columns)
+    if f"SELECT Employees" in cleaned_query:
+        cleaned_query = cleaned_query.replace(f"SELECT Employees", 'SELECT *')
+    
     # Replace the word "table" with "employees"
     cleaned_query = cleaned_query.replace('table', 'employees')
 
@@ -57,7 +61,7 @@ def format_sql_query(sql_query):
     return formatted_query
 
 # Generate SQL Query
-query = "What is the salary of the employeed with ID 4?"
+query = "Show all employees"
 sql_query = get_sql(query, tokenizer, model)
 cleaned_sql_query = clean_sql_output(sql_query)
 
